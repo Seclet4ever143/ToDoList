@@ -1,8 +1,15 @@
 <template>
-    <v-card class="pa-4"  color="secondary">
-      <v-card-title class="headline">To-Do-List</v-card-title>
+    <v-card class="pa-4" color="secondary">
+      <!-- Dynamically show the selected category in the title -->
+      <v-card-title class="headline">
+        To-Do-List 
+        <span v-if="selectedCategory" class="ms-2">
+            Category: 
+          ({{ selectedCategory }})
+        </span>
+      </v-card-title>
       <v-divider></v-divider>
-      
+  
       <v-row v-if="filteredTasks.length === 0" class="text-center">
         <v-col>
           <v-card class="pa-4 bg">
@@ -14,9 +21,10 @@
         <v-col v-for="task in filteredTasks" :key="task.id" cols="12" md="4">
           <v-card class="pa-4 mb-3 bg">
             <v-card-title>{{ task.title }}</v-card-title>
+            
             <v-card-subtitle>Details:</v-card-subtitle>
             <v-divider></v-divider>
-            <v-list class="bg" dense >
+            <v-list class="bg" dense>
               <v-list-item-group>
                 <v-list-item v-for="detail in task.details" :key="detail">
                   <v-list-item-content>
@@ -62,10 +70,11 @@
     }
   };
   </script>
-
+  
   <style>
-    .bg{
-        background-color: rgba(0, 255, 255, 0.573);
-        border-radius: 5px;
-    }
-</style>
+  .bg {
+    background-color: rgba(0, 255, 255, 0.573);
+    border-radius: 5px;
+  }
+  </style>
+  
