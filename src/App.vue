@@ -1,83 +1,19 @@
 <template>
   <v-app>
     <v-container fluid>
-  
       <v-row class="d-flex align-stretch">
+        <DailyProgress :progress="progress" @select-category="selectCategory" />
 
-        <v-col cols="12" md="4" class="d-flex flex-column">
-          <v-card class="pa-4 flex-grow-1" color="secondary">
-            <v-card-title class="headline">Daily Progress</v-card-title>
-            <v-divider></v-divider>
-
-            <div class="progress-container mb-4">
-              <v-progress-linear
-                :value="progress"
-                height="25"
-                class="progress-bar" :style="{ width: progress + '%' }"
-              >
-                <template v-slot:default>
-                  <span class="progress-label">{{ Math.round(progress) }}%</span>
-                </template>
-              </v-progress-linear>
-            </div>
-
-            <v-card-title>Tasks</v-card-title>
-            <v-divider></v-divider>
-          
-            <v-list class="bg">
-              <v-list-item @click="selectCategory('Personal')">
-                <v-list-item-content>
-                  <v-list-item-title>Personal</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item @click="selectCategory('Work')">
-                <v-list-item-content>
-                  <v-list-item-title>Work</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item @click="selectCategory('Health')">
-                <v-list-item-content>
-                  <v-list-item-title>Health</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item @click="selectCategory('Social')">
-                <v-list-item-content>
-                  <v-list-item-title>Social</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="8" class="d-flex flex-column">
-          <v-card class="pa-4 flex-grow-1" color="secondary">
-            <v-card-title class="headline">Add To List</v-card-title>
-            <v-divider></v-divider>
-            <v-form>
-              <v-text-field 
-                v-model="newTaskTitle" 
-                label="Task Title" 
-                dense
-                hide-details
-              />
-              <v-textarea 
-                v-model="newTaskDetails" 
-                label="Task Details" 
-                dense
-                hide-details
-                rows="3"
-              />
-              <v-select 
-                v-model="selectedCategory" 
-                :items="categories" 
-                label="Category" 
-                dense
-                hide-details
-              />
-              <v-btn @click="addTask" class="mt-5 ms-5 bg">Add to List</v-btn>
-            </v-form>
-          </v-card>
-        </v-col>
+        <AddToList 
+          :categories="categories" 
+          :newTaskTitle="newTaskTitle" 
+          :newTaskDetails="newTaskDetails" 
+          :selectedCategory="selectedCategory"
+          @update:newTaskTitle="newTaskTitle = $event"
+          @update:newTaskDetails="newTaskDetails = $event"
+          @update:selectedCategory="selectedCategory = $event"
+          @add-task="addTask"
+        />
       </v-row>
 
       <v-row>
@@ -96,10 +32,14 @@
 </template>
 
 <script>
+import DailyProgress from './components/DailyProgress.vue';
+import AddToList from './components/AddToList.vue';
 import ToDoList from './components/ToDoList.vue';
 
 export default {
   components: {
+    DailyProgress,
+    AddToList,
     ToDoList
   },
   data() {
@@ -127,6 +67,7 @@ export default {
         });
         this.newTaskTitle = '';
         this.newTaskDetails = '';
+        this.selectedCategory = null;
         this.saveTasksToLocalStorage();
         this.updateProgress();
       } else {
@@ -176,38 +117,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.v-card {
-  margin-bottom: 16px;
-}
-
-.progress-container {
-  position: relative;
-  border: 1px solid black;
-  border-radius: 5px;
-}
-
-.progress-bar {
-  position: relative;
-  height: 100%;
-  background-color: rgba(0, 255, 255, 0.445);
-  z-index: 0;
-  border-radius: 5px;
-}
-
-.progress-label {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-weight: bold;
-  color: white;
-  z-index: 1;
-}
-
-.text-decoration-line-through {
-  text-decoration: line-through;
-}
-
-</style>
